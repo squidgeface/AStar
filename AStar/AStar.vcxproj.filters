@@ -15,26 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AStar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClInclude Include="backBuffer.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AStar.cpp">
+    </ClInclude>
+    <ClInclude Include="brush.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="canvas.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shape.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stamp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AStar.rc">
@@ -42,11 +40,37 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
+    <Image Include="Blocker.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="AStar.ico">
+    <Image Include="EmptyBlock.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Goal.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="StartingPoint.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="backBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="brush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="canvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stamp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
