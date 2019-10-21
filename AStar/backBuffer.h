@@ -1,50 +1,67 @@
-/***********************
-  Bachelor of Software Engineering
-  Media Design School
-  Auckland
-  New Zealand
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2019 Media Design School
+//
+// File Name	: 
+// Description	: 
+// Author		: Your Name
+// Mail			: your.name@mediadesign.school.nz
+//
 
-  (c) 2019 Media Design School
+#if !defined(__BACKBUFFER_H__)
+#define __BACKBUFFER_H__
 
-  File Name   :   backBuffer.h
-  Description :   Back Buffer header file
-  Author      :   Alexander Jenkins
-  Mail        :   alexander.jen8470@mediadesign.school.nz
-********************/
-
-#pragma once
-//Library Includes
+// Library Includes
 #include <Windows.h>
 
+// Local Includes
+
+// Types
+
+// Constants
+
+// Prototypes
 class CBackBuffer
 {
+    // Member Functions
 public:
-	CBackBuffer();
-	~CBackBuffer();
+    CBackBuffer();
+    ~CBackBuffer();
 
-	bool Initialise(HWND _hWnd, int _iWidth, int _iHeight);
+    bool Initialise(HWND _hWnd, int _iWidth, int _iHeight);
 
-	HDC GetBFDC() const;
+    HDC GetBFDC() const;
 
-	int GetHeight() const;
-	int GetWidth() const;
+    int GetHeight() const;
+    int GetWidth() const;
 
-	void Clear();
-	void Present();
+    void Clear();
+    void Present();
 
-private:
-	CBackBuffer(const CBackBuffer&);
-	CBackBuffer& operator=(const CBackBuffer&);
+protected:
 
 private:
-	HWND m_hWnd;
-	HDC m_BFDC;  //Handle to the in-memory DC for holding the backbuffer 
-	HBITMAP m_hBFBitmap; //handle to the bitmap that represents the backbuffer
-	HBITMAP m_hOldBitmap; //Used in select object to save the old bitmap.
-	int m_iWidth;
-	int m_iHeight;
+    CBackBuffer(const CBackBuffer& _kr);
+    CBackBuffer& operator= (const CBackBuffer& _kr);
 
+    // Member Variables
+public:
+
+protected:
+    HWND m_hWnd;
+    HDC m_hDC;
+    HBITMAP m_hSurface;
+    HBITMAP m_hOldObject;
+    int m_iWidth;
+    int m_iHeight;
+
+private:
 
 };
 
+#endif    // __BACKBUFFER_H__
 

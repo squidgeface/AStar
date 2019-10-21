@@ -1,250 +1,245 @@
-/***********************
-  Bachelor of Software Engineering
-  Media Design School
-  Auckland
-  New Zealand
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2019 Media Design School
+//
+// File Name	: 
+// Description	: 
+// Author		: Your Name
+// Mail			: your.name@mediadesign.school.nz
+//
 
-  (c) 2019 Media Design School
+//Library Includes
+#include <windows.h>
+#include <windowsx.h>
 
-  File Name   :   main.cpp
-  Description :   main initialisation file
-  Author      :   Alexander Jenkins
-  Mail        :   alexander.jen8470@mediadesign.school.nz
-********************/
-
-//#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>   // Include all the windows headers.
-#include <windowsx.h>  // Include useful macros.
-
+//Local Includes
 #include "resource.h"
-#include "shape.h"
-#include "canvas.h"
-#include "stamp.h"
-#include "brush.h"
-#include "backBuffer.h"
+#include "Game.h"
+#include "Clock.h"
+#include "utils.h"
 
-#define WINDOW_CLASS_NAME "WINCLASS1"
 
-//Global variables
-HINSTANCE g_hInstance;
-CCanvas* g_pCanvas;
-IShape* g_pShape = 0;
-HMENU g_hMenu;
-HDC hdc;
+
+#define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
+
+//Global Variables
+static int s_iMouseX = 0;
+static int s_iMouseY = 0;
 
 //Enum to decalre the type of tool supported by the application.
-enum ESHAPE
+enum ECHOICE
 {
 	NONE,
-	STARTP,
-	ENDP,
-	BLOCKER,
+	START,
+	END,
+	BLOCKER
 };
 
-void GameLoop()
+LRESULT CALLBACK
+WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 {
-	//One frame of game logic occurs here...
-	if (g_pCanvas)
-	{
-		g_pCanvas->Draw(hdc);
-	}
-}
-
-
-LRESULT CALLBACK WindowProc(HWND _hwnd,
-	UINT _msg,
-	WPARAM _wparam,
-	LPARAM _lparam)
-{
-	// This is the main message handler of the system.
-	PAINTSTRUCT ps; // Used in WM_PAINT.
-	        // Handle to a device context.
-	static ESHAPE s_currentShape = NONE;
-	static int s_iMouseX = 0;
-	static int s_iMouseY = 0;
-	
-	
+	static ECHOICE s_currentChoice = NONE;
 	
 	
 
-
-	
-	switch (_msg)
-	{
-	case WM_CREATE:
-	{
-		// Do initialization stuff here.
-		g_pCanvas = new CCanvas();
-		g_pCanvas->Initialise(_hwnd, 2000, 2000);
-
-
-		// Return Success.
-		return (0);
-	}
-	break;
-	case WM_PAINT:
-	{
-		hdc = BeginPaint(_hwnd, &ps);
-		// You would do all your painting here...
-		
-		
-
-		EndPaint(_hwnd, &ps);
-		// Return Success.
-		return (0);
-	}
-	break;
-
-	case WM_LBUTTONDOWN:
-	{
-		s_iMouseX = static_cast<int>(LOWORD(_lparam));
-		s_iMouseY = static_cast<int>(HIWORD(_lparam));
-		
-
-		switch (s_currentShape)
+    switch (_uiMsg)
+    {
+		case WM_CREATE:
 		{
-		
-		case STARTP:
-		{
-
-			g_pShape = new CStamp();
-			g_pCanvas->AddShape(g_pShape);
-			break;
+			// Do initialization stuff here.
+			
+			// Return Success.
+			return (0);
 		}
-		case ENDP:
+		break;
+	
+		case WM_MOUSEMOVE:
 		{
-
-			g_pShape = new CStamp();
-			g_pCanvas->AddShape(g_pShape);
-			break;
+			//int iMouseX = LOWORD(_lParam);
+			s_iMouseX = static_cast<int>(LOWORD(_lParam));
+			s_iMouseY = static_cast<int>(HIWORD(_lParam));
+			
+			
 		}
-		case BLOCKER:
+		break;
+
+		case WM_LBUTTONDOWN:
 		{
+			s_iMouseX = LOWORD(_lParam);
+			s_iMouseY = HIWORD(_lParam);
 
-			g_pShape = new CStamp();
-			g_pCanvas->AddShape(g_pShape);
-			break;
+
+			switch (s_currentChoice)
+			{
+
+			case START:
+			{
+
+				break;
+			}
+			case END:
+			{
+
+				break;
+			}
+			case BLOCKER:
+			{
+
+				break;
+			}
+			default: break;
+			}
+
+			return (0);
 		}
-		
-		default:
-			break;
-		}
+		break;
 
-		return (0);
-	}
-	break;
+        case WM_DESTROY:
+        {
+            PostQuitMessage(0);
 
-	case WM_COMMAND:
-	{
-		switch (LOWORD(_wparam))
+            return(0);
+        }
+        break;
+
+		case WM_COMMAND:
 		{
-				//File Menu
+			switch (LOWORD(_wParam))
+			{
 			case ID_FILE_EXIT:
 			{
 				PostQuitMessage(0);
 				break;
 			}
-
-			
-			default:
-				break;
-		}
-		return(0);
-	}
-	break;
-	case WM_DESTROY:
-	{
-		delete g_pCanvas;
-		// Kill the application, this sends a WM_QUIT message.
-		PostQuitMessage(0);
-
-		// Return success.
-		return (0);
-	}
-	break;
-
-		default:break;
-	} // End switch.
-
-	  // Process any messages that we did not take care of...
-
-	return (DefWindowProc(_hwnd, _msg, _wparam, _lparam));
-}
-
-int WINAPI WinMain(HINSTANCE _hInstance,
-	HINSTANCE _hPrevInstance,
-	LPSTR _lpCmdLine,
-	int _nCmdShow)
-{
-	WNDCLASSEX winclass; // This will hold the class we create.
-	HWND hwnd;           // Generic window handle.
-	MSG msg;             // Generic message.
-
-	g_hInstance = _hInstance;
-	// First fill in the window class structure.
-	winclass.cbSize = sizeof(WNDCLASSEX);
-	winclass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-	winclass.lpfnWndProc = WindowProc;
-	winclass.cbClsExtra = 0;
-	winclass.cbWndExtra = 0;
-	winclass.hInstance = _hInstance;
-	winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	winclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	winclass.hbrBackground =
-		static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-	winclass.lpszMenuName = NULL;
-	winclass.lpszClassName = WINDOW_CLASS_NAME;
-	winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
-
-	// register the window class
-	if (!RegisterClassEx(&winclass))
-	{
-		return (0);
-	}
-
-	g_hMenu = LoadMenu(_hInstance, MAKEINTRESOURCE(IDR_MENU1));
-	// create the window
-	hwnd = CreateWindowEx(NULL, // Extended style.
-		WINDOW_CLASS_NAME,      // Class.
-		"My A* Algorithm",   // Title.
-		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		100, 100,                    // Initial x,y.
-		1500, 800,                // Initial width, height.
-		NULL,                   // Handle to parent.
-		g_hMenu,                   // Handle to menu.
-		_hInstance,             // Instance of this application.
-		NULL);                  // Extra creation parameters.
-
-	if (!(hwnd))
-	{
-		return (0);
-	}
-
-
-
-	// Enter main event loop
-	while (true)
-	{
-		// Test if there is a message in queue, if so get it.
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			// Test if this is a quit.
-			if (msg.message == WM_QUIT)
+			case ID_ADD_STARTPOINT:
 			{
+				s_currentChoice = START;
+				break;
+			}
+			case ID_ADD_ENDPOINT:
+			{
+				s_currentChoice = END;
+				break;
+			}
+			case ID_ADD_BLOCKER:
+			{
+				s_currentChoice = BLOCKER;
+				break;
+			}
+			case ID_EXECUTE:
+			{
+
+				break;
+			}
+			case ID_RESET:
+			{
+
+				break;
+			}
+			case ID_HELP_INSTRUCTIONS:
+			{
+				MessageBox(_hWnd, L"Define a start point, an end point and add some blockers then press 'execute'. The program will not run if there is no path. Press 'reset' to start over", L"Instructions", MB_OK | MB_ICONINFORMATION);
 				break;
 			}
 
-			// Translate any accelerator keys.
-			TranslateMessage(&msg);
-			// Send the message to the window proc.
-			DispatchMessage(&msg);
+			default:
+				break;
+			}
+			return(0);
 		}
+		break;
 
-		// Main game processing goes here.
-		GameLoop(); //One frame of game logic occurs here...
-	}
+        default:break;
+    } 
 
-	// Return to Windows like this...
-	return (static_cast<int>(msg.wParam));
+
+
+    return (DefWindowProc(_hWnd, _uiMsg, _wParam, _lParam));
+}
+
+HWND 
+CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LPCWSTR _pcTitle)
+{
+    WNDCLASSEX winclass;
+
+    winclass.cbSize = sizeof(WNDCLASSEX);
+    winclass.style = CS_HREDRAW | CS_VREDRAW;
+    winclass.lpfnWndProc = WindowProc;
+    winclass.cbClsExtra = 0;
+    winclass.cbWndExtra = 0;
+    winclass.hInstance = _hInstance;
+    winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+    winclass.hCursor = LoadCursor(NULL, IDC_ARROW);
+    winclass.hbrBackground = static_cast<HBRUSH> (GetStockObject(NULL_BRUSH));
+	winclass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);//static_cast<HMENU>(LoadMenu(_hInstance, MAKEINTRESOURCE(IDR_MENU1)));
+    winclass.lpszClassName = WINDOW_CLASS_NAME;
+    winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+
+    if (!RegisterClassEx(&winclass))
+    {
+        // Failed to register.
+        return (0);
+    }
+
+    HWND hwnd; 
+    hwnd = CreateWindowEx(NULL,
+                  WINDOW_CLASS_NAME,
+                  _pcTitle,
+              WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_VISIBLE, 
+                  CW_USEDEFAULT, CW_USEDEFAULT,
+                  _iWidth, _iHeight,
+                  NULL,
+                  NULL,
+                  _hInstance,
+                  NULL);
+    
+    if (!hwnd)
+    {
+        // Failed to create.
+        return (0);
+    }
+
+    return (hwnd);
+}
+
+int WINAPI
+WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
+{
+    MSG msg;
+    ZeroMemory(&msg, sizeof(MSG));
+
+    const int kiWidth = 800;
+    const int kiHeight = 800;
+
+    HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"BSENGG Framework");
+
+    CGame& rGame = CGame::GetInstance();
+	
+
+    if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
+    {
+        // Failed
+        return (0);
+    }
+
+    while (msg.message != WM_QUIT)
+    {
+        if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            rGame.ExecuteOneFrame(s_iMouseX, s_iMouseY);
+        }
+    }
+
+    CGame::DestroyInstance();
+
+    return (static_cast<int>(msg.wParam));
 }
