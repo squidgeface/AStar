@@ -42,6 +42,7 @@ CGame::CGame()
 , m_pHud(0)
 , m_MouseX(0)
 , m_MouseY(0)
+, m_isClicked(0)
 {
 
 }
@@ -79,6 +80,7 @@ CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 
 	m_pHud = new CHUD(_hWnd);
 	
+	
 	SetMousePosition(m_MouseX, m_MouseY);
 	
 	//ShowCursor(false);
@@ -90,8 +92,9 @@ void
 CGame::Draw()
 {
     m_pBackBuffer->Clear();
-	m_pHud->SetMousePosition(m_MouseX, m_MouseY);
-	m_pHud->DrawHUD();
+	m_pLevel->SetMouse(m_MouseX, m_MouseY);
+	/*m_pHud->SetMousePosition(m_MouseX, m_MouseY);
+	m_pHud->DrawHUD();*/
 
 // Do all the game’s drawing here...
 	m_pLevel->Draw();
@@ -111,9 +114,12 @@ CGame::Process(float _fDeltaTick)
 }
 
 void 
-CGame::ExecuteOneFrame(int _iMouseX, int _iMouseY)
+CGame::ExecuteOneFrame(int _iMouseX, int _iMouseY, bool _mouse, ECHOICE _choice)
 {
+
+	SetMouseClicked(_mouse);
 	SetMousePosition(_iMouseX, _iMouseY);
+	SetChoice(_choice);
     float fDT = m_pClock->GetDeltaTick();
 
     Process(fDT);
@@ -150,6 +156,17 @@ void CGame::SetMousePosition(int _iX, int _iY)
 {
 	m_MouseX = _iX;
 	m_MouseY = _iY;
+}
+
+void CGame::SetMouseClicked(bool _isClicked)
+{
+	m_isClicked = _isClicked;
+	m_pLevel->isClicked(_isClicked);
+}
+
+void CGame::SetChoice(ECHOICE _choice)
+{
+	m_pLevel->SetChoice(_choice);
 }
 
 CBackBuffer* 

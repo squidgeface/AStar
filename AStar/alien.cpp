@@ -38,9 +38,9 @@ CAlien::~CAlien()
 }
 
 bool
-CAlien::Initialise()
+CAlien::Initialise(const int _kiSpriteID)
 {
-	VALIDATE(CEntity::Initialise(IDB_EMPTY));
+	VALIDATE(CEntity::Initialise(_kiSpriteID));
 
 	return (true);
 }

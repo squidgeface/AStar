@@ -28,7 +28,7 @@ public:
 	CAlien();
 	virtual ~CAlien();
 
-	virtual bool Initialise();
+	virtual bool Initialise(const int _kiSpriteID);
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);

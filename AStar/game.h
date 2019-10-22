@@ -30,6 +30,14 @@ class CLevel;
 class CBackBuffer;
 class CHUD;
 
+enum ECHOICE
+{
+	NONE,
+	START,
+	END,
+	BLOCKER
+};
+
 class CGame
 {
     // Member Functions
@@ -41,7 +49,7 @@ public:
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
 
-    void ExecuteOneFrame(int _iMouseX, int _iMouseY);
+    void ExecuteOneFrame(int _iMouseX, int _iMouseY, bool _mouse, ECHOICE _choice);
 
     CBackBuffer* GetBackBuffer();
 	CLevel* GetLevel();
@@ -52,6 +60,10 @@ public:
     static CGame& GetInstance();
     static void DestroyInstance();
 	void SetMousePosition(int _iX, int _iY);
+
+	void SetMouseClicked(bool _isClicked);
+
+	void SetChoice(ECHOICE _choice);
 
 protected:
 
@@ -67,6 +79,7 @@ protected:
     CClock* m_pClock;
 	CLevel* m_pLevel;
 	CHUD* m_pHud;
+	
 
     CBackBuffer* m_pBackBuffer;
 
@@ -77,6 +90,7 @@ protected:
 
 	int m_MouseX;
 	int m_MouseY;
+	bool m_isClicked;
 
     // Singleton Instance
     static CGame* s_pGame;

@@ -24,25 +24,21 @@
 
 
 
+
+
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
 
 //Global Variables
 static int s_iMouseX = 0;
 static int s_iMouseY = 0;
+bool g_mouseIsDown = false;
+static ECHOICE s_currentChoice = NONE;
 
-//Enum to decalre the type of tool supported by the application.
-enum ECHOICE
-{
-	NONE,
-	START,
-	END,
-	BLOCKER
-};
 
 LRESULT CALLBACK
 WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 {
-	static ECHOICE s_currentChoice = NONE;
+	
 	
 	
 
@@ -64,13 +60,19 @@ WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 			s_iMouseY = static_cast<int>(HIWORD(_lParam));
 			
 			
+			
+		}
+		break;
+
+		case WM_LBUTTONUP:
+		{
+			g_mouseIsDown = false;
 		}
 		break;
 
 		case WM_LBUTTONDOWN:
 		{
-			s_iMouseX = LOWORD(_lParam);
-			s_iMouseY = HIWORD(_lParam);
+			g_mouseIsDown = true;
 
 
 			switch (s_currentChoice)
@@ -78,6 +80,8 @@ WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 
 			case START:
 			{
+				
+				
 
 				break;
 			}
@@ -235,7 +239,7 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
         }
         else
         {
-            rGame.ExecuteOneFrame(s_iMouseX, s_iMouseY);
+            rGame.ExecuteOneFrame(s_iMouseX, s_iMouseY, g_mouseIsDown, s_currentChoice);
         }
     }
 

@@ -20,6 +20,7 @@
 // Library Includes
 #include <vector>
 #include <string>
+#include "game.h"
 
 // Local Includes
 
@@ -33,7 +34,6 @@ class CPlayer;
 class CAlien;
 
 
-
 class CLevel
 {
 	// Member Functions
@@ -45,7 +45,13 @@ public:
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
+	virtual void SetMouse(int _iMouseX, int _iMouseY);
+	virtual bool CheckCollision(int _iMouseX, int _iMouseY, std::vector<CAlien*> _vecBrick);
+	virtual bool inRange(float _xMin, float _xMax, float x);
 
+	virtual void isClicked(bool _iMouseIsDown);
+
+	void SetChoice(ECHOICE _choice);
 
 
 protected:
@@ -64,6 +70,13 @@ protected:
 	CPlayer* m_pPaddle;
 	std::vector<CAlien*> m_vecBricks;
 	
+	int m_iMouseX;
+	int m_iMouseY;
+	bool m_ismouseDown;
+	bool end;
+	bool start;
+
+	ECHOICE m_choice;
 
 	int m_iWidth;
 	int m_iHeight;
