@@ -33,6 +33,7 @@ static int s_iMouseX = 0;
 static int s_iMouseY = 0;
 bool g_mouseIsDown = false;
 static ECHOICE s_currentChoice = NONE;
+bool restart = false;
 
 
 LRESULT CALLBACK
@@ -141,7 +142,7 @@ WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 			}
 			case ID_RESET:
 			{
-
+				restart = true;
 				break;
 			}
 			case ID_HELP_INSTRUCTIONS:
@@ -241,9 +242,16 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
         {
             rGame.ExecuteOneFrame(s_iMouseX, s_iMouseY, g_mouseIsDown, s_currentChoice);
         }
+		if (restart == true)
+		{
+			rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight);
+			restart = false;
+		}
     }
 
-    CGame::DestroyInstance();
+
+		CGame::DestroyInstance();
+	
 
     return (static_cast<int>(msg.wParam));
 }
