@@ -76,6 +76,13 @@ protected:
 	bool end;
 	bool start;
 
+	int m_iStartPos;
+	int m_iEndPos;
+	int m_iBlocker;
+
+	std::vector<int> m_vecConvertor;
+	int m_vecArray[10][10];
+
 	ECHOICE m_choice;
 
 	int m_iWidth;
