@@ -20,6 +20,8 @@ void PathFinding::SetStartSetGoal(SearchCell _Start, SearchCell _Goal)
 	StartCell->Parent = 0;
 
 	OpenList.push_back(StartCell);
+
+	InitStartGoal = true;
 }
 
 SearchCell* PathFinding::GetNextCell()
