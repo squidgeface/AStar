@@ -103,10 +103,7 @@ CLevel::Initialise(int _iWidth, int _iHeight)
 		m_vecBricks.push_back(pBrick);
 	}
 
-	for (int i = 0; i < 99; i++)
-	{
-		m_vecConvertor[i] = 0;
-	}
+	
 	
 
 	return (true);
@@ -149,7 +146,7 @@ bool CLevel::CheckCollision(int _iMouseX, int _iMouseY, std::vector<CAlien*> _ve
 		
 			if (inRange(_vecBrick[i]->GetX() - 24, _vecBrick[i]->GetX() + 24, _iMouseX) && inRange(_vecBrick[i]->GetY() - 24, _vecBrick[i]->GetY() + 24, _iMouseY) && m_ismouseDown && m_choice == START && !start)
 			{
-				if (i <= 9)
+				/*if (i <= 9)
 				{
 					m_vecArray[0][i] = 1;
 				}
@@ -188,7 +185,7 @@ bool CLevel::CheckCollision(int _iMouseX, int _iMouseY, std::vector<CAlien*> _ve
 				else if (i >= 90 && i <= 99)
 				{
 					m_vecArray[9][i - 90] = 1;
-				}
+				}*/
 				
 				VALIDATE(_vecBrick[i]->Initialise(IDB_START));
 				start = true;
@@ -196,7 +193,7 @@ bool CLevel::CheckCollision(int _iMouseX, int _iMouseY, std::vector<CAlien*> _ve
 			}
 			if (inRange(_vecBrick[i]->GetX() - 24, _vecBrick[i]->GetX() + 24, _iMouseX) && inRange(_vecBrick[i]->GetY() - 24, _vecBrick[i]->GetY() + 24, _iMouseY) && m_ismouseDown && m_choice == END && !end)
 			{
-				if (i <= 9)
+				/*if (i <= 9)
 				{
 					m_vecArray[0][i] = 2;
 				}
@@ -235,14 +232,14 @@ bool CLevel::CheckCollision(int _iMouseX, int _iMouseY, std::vector<CAlien*> _ve
 				else if (i >= 90 && i <= 99)
 				{
 					m_vecArray[9][i - 90] = 2;
-				}
+				}*/
 				VALIDATE(_vecBrick[i]->Initialise(IDB_GOAL));
 				end = true;
 				m_iEndPos = i;
 			}
 			if (inRange(_vecBrick[i]->GetX() - 24, _vecBrick[i]->GetX() + 24, _iMouseX) && inRange(_vecBrick[i]->GetY() - 24, _vecBrick[i]->GetY() + 24, _iMouseY) && m_ismouseDown && m_choice == BLOCKER)
 			{
-				if (i <= 9)
+				/*if (i <= 9)
 				{
 					m_vecArray[0][i] = 3;
 				}
@@ -281,7 +278,7 @@ bool CLevel::CheckCollision(int _iMouseX, int _iMouseY, std::vector<CAlien*> _ve
 				else if (i >= 90 && i <= 99)
 				{
 					m_vecArray[9][i - 90] = 3;
-				}
+				}*/
 				VALIDATE(_vecBrick[i]->Initialise(IDB_BLOCKER));
 				m_iBlocker = i;
 			}
@@ -304,4 +301,3 @@ void CLevel::SetChoice(ECHOICE _choice)
 	m_choice = _choice;
 }
 
-vector<int>
