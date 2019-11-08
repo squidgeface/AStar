@@ -20,6 +20,7 @@
 
 // Local Includes
 #include "clock.h"
+#include "PathFinding.h"
 
 // Types
 
@@ -29,6 +30,7 @@
 class CLevel;
 class CBackBuffer;
 class CHUD;
+class CPathFinding;
 
 enum ECHOICE
 {
@@ -43,18 +45,26 @@ class CGame
     // Member Functions
 public:
     virtual ~CGame();
-
+	CGame();
     virtual bool Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight);
 
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
 
-    void ExecuteOneFrame(int _iMouseX, int _iMouseY, bool _mouse, ECHOICE _choice);
+    void ExecuteOneFrame(int _iMouseX, int _iMouseY, bool _mouse, ECHOICE _choice, bool _pathing);
 
     CBackBuffer* GetBackBuffer();
 	CLevel* GetLevel();
     HINSTANCE GetAppInstance();
     HWND GetWindow();
+
+	bool PathFinding();
+
+	void InitialisePath();
+
+	bool RestartLevel(int _iWidth, int _iHeight);
+
+	
 
     // Singleton Methods
     static CGame& GetInstance();
@@ -68,18 +78,20 @@ public:
 protected:
 
 private:
-    CGame();
+    
     CGame(const CGame& _kr);
     CGame& operator= (const CGame& _kr);
 
     // Member Variables
 public:
+	
 
 protected:
     CClock* m_pClock;
 	CLevel* m_pLevel;
 	CHUD* m_pHud;
-	
+	CPathFinding* m_pPathFinding;
+	SearchCell* cellPathing;
 
     CBackBuffer* m_pBackBuffer;
 
@@ -91,6 +103,11 @@ protected:
 	int m_MouseX;
 	int m_MouseY;
 	bool m_isClicked;
+	bool isPathing;
+
+	int m_PathCounter;
+
+	
 
     // Singleton Instance
     static CGame* s_pGame;

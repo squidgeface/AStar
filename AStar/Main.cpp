@@ -21,7 +21,7 @@
 #include "Game.h"
 #include "Clock.h"
 #include "utils.h"
-
+#include "PathFinding.h"
 
 
 
@@ -34,6 +34,8 @@ static int s_iMouseY = 0;
 bool g_mouseIsDown = false;
 static ECHOICE s_currentChoice = NONE;
 bool restart = false;
+bool pathing = false;
+int timer = 0;
 
 
 LRESULT CALLBACK
@@ -68,13 +70,14 @@ WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 		case WM_LBUTTONUP:
 		{
 			g_mouseIsDown = false;
+		
 		}
 		break;
-
+		
 		case WM_LBUTTONDOWN:
 		{
 			g_mouseIsDown = true;
-
+			
 
 			switch (s_currentChoice)
 			{
@@ -137,7 +140,9 @@ WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 			}
 			case ID_EXECUTE:
 			{
-
+				
+				pathing = true;
+				
 				break;
 			}
 			case ID_RESET:
@@ -220,7 +225,7 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
     const int kiWidth = 800;
     const int kiHeight = 800;
 
-    HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"BSENGG Framework");
+    HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"A* Path Finding");
 
     CGame& rGame = CGame::GetInstance();
 	
@@ -240,11 +245,29 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
         }
         else
         {
-            rGame.ExecuteOneFrame(s_iMouseX, s_iMouseY, g_mouseIsDown, s_currentChoice);
+			
+            rGame.ExecuteOneFrame(s_iMouseX, s_iMouseY, g_mouseIsDown, s_currentChoice, pathing);
+			
         }
+
+		if (pathing)
+		{
+			
+			if (timer < 1)
+			{
+				timer += 1;
+			}
+			else if (timer >= 1)
+			{
+				pathing = false;
+				timer = 0;
+			}
+		}
+
 		if (restart == true)
 		{
-			rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight);
+			pathing = false;
+			rGame.RestartLevel(kiWidth, kiHeight);
 			restart = false;
 		}
     }

@@ -11,6 +11,10 @@ struct SearchCell
 
 	int Id;
 
+	bool isBlocker = false;
+
+	bool isBarriar = false;
+
 	SearchCell* Parent;
 
 	float G; float H;

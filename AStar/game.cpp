@@ -21,6 +21,8 @@
 #include "utils.h"
 #include "sprite.h"
 #include "HUD.h"
+#include "resource.h"
+
 
 
 // This Include
@@ -43,6 +45,10 @@ CGame::CGame()
 , m_MouseX(0)
 , m_MouseY(0)
 , m_isClicked(0)
+, isPathing(false)
+, m_pPathFinding(0)
+, cellPathing(0)
+, m_PathCounter(0)
 {
 
 }
@@ -60,6 +66,12 @@ CGame::~CGame()
 
 	delete m_pHud;
 	m_pHud = 0;
+
+	delete m_pPathFinding;
+	m_pPathFinding = 0;
+
+	delete cellPathing;
+	cellPathing = 0;
 }
 
 bool
@@ -80,8 +92,10 @@ CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 
 	m_pHud = new CHUD(_hWnd);
 	
-	
+	m_pPathFinding = new CPathFinding();
 	SetMousePosition(m_MouseX, m_MouseY);
+
+	cellPathing = new SearchCell(0,0,0);
 	
 	//ShowCursor(false);
 
@@ -114,19 +128,33 @@ CGame::Process(float _fDeltaTick)
 }
 
 void 
-CGame::ExecuteOneFrame(int _iMouseX, int _iMouseY, bool _mouse, ECHOICE _choice)
+CGame::ExecuteOneFrame(int _iMouseX, int _iMouseY, bool _mouse, ECHOICE _choice, bool _pathing)
 {
 
-	SetMouseClicked(_mouse);
-	SetMousePosition(_iMouseX, _iMouseY);
-	SetChoice(_choice);
+	
     float fDT = m_pClock->GetDeltaTick();
+
+	if (_pathing)
+	{
+		isPathing = true;
+	}
+	else
+	{
+		isPathing = false;
+	}
 
     Process(fDT);
     Draw();
-
+	
     m_pClock->Process();
-
+	if (!_pathing)
+	{
+		m_PathCounter = 0;
+	}
+	PathFinding();
+	SetMouseClicked(_mouse);
+	SetMousePosition(_iMouseX, _iMouseY);
+	SetChoice(_choice);
     Sleep(1);
 }
 
@@ -139,7 +167,6 @@ CGame::GetInstance()
     {
         s_pGame = new CGame();
     }
-
     return (*s_pGame);
 }
 
@@ -150,6 +177,7 @@ CGame::DestroyInstance()
 {
     delete s_pGame;
     s_pGame = 0;
+	
 }
 
 void CGame::SetMousePosition(int _iX, int _iY)
@@ -191,4 +219,72 @@ HWND
 CGame::GetWindow()
 {
     return (m_hMainWindow);
+}
+
+bool
+CGame::PathFinding()
+{
+	if (m_PathCounter == 0) {
+		if (isPathing)
+		{
+			if (m_pLevel->startCell->Xpos != -1 && m_pLevel->endCell->Xpos != -1)
+			{
+				m_pPathFinding->SetStartSetGoal(m_pLevel->startCell, m_pLevel->endCell, m_pLevel->vecblockerCell);
+
+				while (!m_pPathFinding->FoundGoal)
+				{
+
+					m_pPathFinding->ContinuePath();
+
+				}
+
+				InitialisePath();
+				m_PathCounter++;
+			}
+			else
+			{
+				if (m_pLevel->startCell->Xpos == -1 && m_pLevel->endCell->Xpos == -1)
+					MessageBox(GetWindow(), L"Please place a start and end pont", L"Error!", MB_OK);
+				else if (m_pLevel->startCell->Xpos == -1)
+					MessageBox(GetWindow(), L"Please place a start pont", L"Error!", MB_OK);
+				else if (m_pLevel->endCell->Xpos == -1)
+					MessageBox(GetWindow(), L"Please place an end pont", L"Error!", MB_OK);
+				
+				return(true);
+			}
+		}	
+	}
+	
+	return(true);
+}
+
+void CGame::InitialisePath()
+{
+	if (m_pLevel->vecPathCells.size() == 0)
+	{
+		for (int i = 0; i < m_pPathFinding->Path.size(); i++)
+		{
+			if (!m_pPathFinding->blocked)
+			{
+
+				SearchCell* insert = new SearchCell(m_pPathFinding->Path[i]->x, m_pPathFinding->Path[i]->y, 0);
+
+				m_pLevel->vecPathCells.push_back(insert);
+			}
+			else {
+				MessageBox(GetWindow(), L"No Path Found", L"Error!", MB_OK);
+				
+				isPathing = false;
+				return;
+			}
+
+		}
+		
+	}
+}
+
+bool CGame::RestartLevel(int _iWidth, int _iHeight)
+{
+	Initialise(GetAppInstance(), GetWindow(), _iWidth, _iHeight);
+	return(true);
 }

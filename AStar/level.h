@@ -22,7 +22,9 @@
 #include <string>
 #include "game.h"
 
+
 // Local Includes
+#include "SearchCell.h"
 
 // Types
 
@@ -32,6 +34,7 @@
 class CBall;
 class CPlayer;
 class CAlien;
+
 
 
 class CLevel
@@ -53,6 +56,10 @@ public:
 
 	void SetChoice(ECHOICE _choice);
 
+	bool ShowPath();
+
+	bool InitialisePath();
+
 
 protected:
 
@@ -63,6 +70,13 @@ private:
 
 	// Member Variables
 public:
+	SearchCell* startCell;
+	SearchCell* endCell;
+	SearchCell* blockerCell;
+	SearchCell* blankCell;
+	std::vector<SearchCell*> vecblockerCell;
+	std::vector<SearchCell*> vecAllCells;
+	std::vector<SearchCell*> vecPathCells;
 
 protected:
 	
@@ -75,10 +89,14 @@ protected:
 	bool m_ismouseDown;
 	bool end;
 	bool start;
+	bool blocker;
+	bool process;
 
 	int m_iStartPos;
 	int m_iEndPos;
 	int m_iBlocker;
+
+	int m_iCounter;
 
 	
 	int m_vecArray[10][10];
@@ -91,6 +109,8 @@ protected:
 	int m_iBricksRemaining;
 
 	std::string m_strScore;
+
+	
 
 private:
 

@@ -17,14 +17,19 @@ struct Vector3
 	}
 };
 
-class PathFinding
+class CPathFinding
 {
 public:
-	PathFinding();
-	~PathFinding();
+	CPathFinding();
+	~CPathFinding();
+
+	void InitialiseBlockers(std::vector<SearchCell*> _blockers);
+
+	void SetStartSetGoal(SearchCell * _Start, SearchCell * _Goal, std::vector<SearchCell*> _blockers);
 
 	void FindPath(Vector3 _Currentpos, Vector3 _Targetpos);
 	Vector3 NextPathPos(SearchCell* obj);
+	
 
 	void ClearOpenList();
 	void ClearClosedList();
@@ -32,9 +37,18 @@ public:
 
 	bool InitStartGoal;
 	bool FoundGoal;
+	bool Corner;
+	bool uBlocker;
+	int uCount;
+	bool lBlocker;
+	int lCount;
+	bool rBlocker;
+	int rCount;
+	bool dBlocker;
+	int dCount;
+	bool blocked;
+	bool firstRun;
 
-private:
-	void SetStartSetGoal(SearchCell _Start, SearchCell _Goal);
 
 	void PathOpened(int _x, int _y, float _newCost, SearchCell* _parent);
 
@@ -43,10 +57,12 @@ private:
 
 	SearchCell* StartCell;
 	SearchCell* GoalCell;
+	
 
 	std::vector<SearchCell*> OpenList;
 	std::vector<SearchCell*> ClosedList;
 	std::vector<Vector3*> Path;
+	std::vector<SearchCell*> blockerCells;
 };
 
 #endif __PATHFINDING_H__
